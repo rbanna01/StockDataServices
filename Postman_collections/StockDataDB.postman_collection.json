@@ -1,0 +1,215 @@
+{
+	"info": {
+		"_postman_id": "17ffa1d2-c4ce-41c8-88e0-a3c7dd6da774",
+		"name": "StockDataDB",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18625326"
+	},
+	"item": [
+		{
+			"name": "GetAllDTODatasets",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7238/DTODatasets",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7238",
+					"path": [
+						"DTODatasets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetByID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7238/DTODatasets?symbols=[\"AAPL\",]",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7238",
+					"path": [
+						"DTODatasets"
+					],
+					"query": [
+						{
+							"key": "symbols",
+							"value": "[\"AAPL\",]"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetByMetadata",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200 OK\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Metadata to match input filters\", function () {\r",
+							"   const responseBody = pm.response.json();\r",
+							"\r",
+							"   pm.expect(responseBody.metadata).to.exist; // Ensure metadata exists\r",
+							"   pm.expect(responseBody.metadata.dateFrom).to.eql('2025-06-01T00:00:00Z');\r",
+							"   pm.expect(responseBody.metadata.dateTo).to.eql('2025-06-08T00:00:00Z');\r",
+							"   \r",
+							"   pm.expect(responseBody.metadata.symbols).to.include(\"AAPL\");\r",
+							"   pm.expect(responseBody.metadata.symbols).to.include(\"MSFT\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7238/DTODatasetByMetadata?symbols=AAPL,MSFT&dateFrom=2025-06-01&dateTo=2025-06-08",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7238",
+					"path": [
+						"DTODatasetByMetadata"
+					],
+					"query": [
+						{
+							"key": "symbols",
+							"value": "AAPL,MSFT"
+						},
+						{
+							"key": "dateFrom",
+							"value": "2025-06-01"
+						},
+						{
+							"key": "dateTo",
+							"value": "2025-06-08"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 201 Created\", function() {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Metadata of output object matches input\", function () {\r",
+							"   const responseBody = pm.response.json();\r",
+							"\r",
+							"   pm.expect(responseBody.metadata).to.exist; // Ensure metadata exists\r",
+							"   pm.expect(responseBody.metadata.dateFrom).to.eql('2025-06-01T00:00:00');\r",
+							"   pm.expect(responseBody.metadata.dateTo).to.eql('2025-06-08T00:00:00');\r",
+							"   \r",
+							"\r",
+							"   pm.expect(responseBody.metadata.symbols).to.include(\"AAPL\");\r",
+							"   pm.expect(responseBody.metadata.symbols).to.include(\"MSFT\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"Metadata\": {\r\n \t\"Symbols\": [\"AAPL\",\"MSFT\"],\r\n\t\"DateFrom\": \"2025-06-01\",\r\n\t\"DateTo\": \"2025-06-08\"\r\n   },\r\n\t\r\n\t\"EODData\": [\r\n    {\r\n        \"Open\": 203.0,\r\n        \"High\": 205.7,\r\n        \"Low\": 202.05,\r\n        \"Close\": 203.92,\r\n        \"Volume\": 46539200.0,\r\n        \"Adj_High\": 205.7,\r\n        \"Adj_Low\": 202.05,\r\n        \"Adj_Close\": 203.92,\r\n        \"Adj_Open\": 203.0,\r\n        \"Adj_Volume\": 46607693.0,\r\n        \"Split_Factor\": 1.0,\r\n        \"Dividend\": 0.0,\r\n        \"Name\": \"Apple Inc\",\r\n        \"Exchange_Code\": \"NASDAQ\",\r\n        \"Asset_Type\": \"Stock\",\r\n        \"Price_Currency\": \"USD\",\r\n        \"Symbol\": \"AAPL\",\r\n        \"Exchange\": \"XNAS\",\r\n        \"Date\": \"2025-06-06T00:00:00+00:00\"\r\n    },\r\n    {\r\n        \"Open\": 470.09,\r\n        \"High\": 473.34,\r\n        \"Low\": 468.78,\r\n        \"Close\": 470.38,\r\n        \"Volume\": 15278600.0,\r\n        \"Adj_High\": 473.335,\r\n        \"Adj_Low\": 468.78,\r\n        \"Adj_Close\": 470.38,\r\n        \"Adj_Open\": 470.085,\r\n        \"Adj_Volume\": 15285624.0,\r\n        \"Split_Factor\": 1.0,\r\n        \"Dividend\": 0.0,\r\n        \"Name\": \"Microsoft Corporation\",\r\n        \"Exchange_Code\": \"NASDAQ\",\r\n        \"Asset_Type\": \"Stock\",\r\n        \"Price_Currency\": \"USD\",\r\n        \"Symbol\": \"MSFT\",\r\n        \"Exchange\": \"XNAS\",\r\n        \"Date\": \"2025-06-06T00:00:00+00:00\"\r\n    },\r\n    {\r\n        \"Open\": 203.5,\r\n        \"High\": 204.75,\r\n        \"Low\": 200.15,\r\n        \"Close\": 200.63,\r\n        \"Volume\": 55126100.0,\r\n        \"Adj_High\": 204.75,\r\n        \"Adj_Low\": 200.15,\r\n        \"Adj_Close\": 200.63,\r\n        \"Adj_Open\": 203.5,\r\n        \"Adj_Volume\": 55221235.0,\r\n        \"Split_Factor\": 1.0,\r\n        \"Dividend\": 0.0,\r\n        \"Name\": \"Apple Inc\",\r\n        \"Exchange_Code\": \"NASDAQ\",\r\n        \"Asset_Type\": \"Stock\",\r\n        \"Price_Currency\": \"USD\",\r\n        \"Symbol\": \"AAPL\",\r\n        \"Exchange\": \"XNAS\",\r\n        \"Date\": \"2025-06-05T00:00:00+00:00\"\r\n    },\r\n    {\r\n        \"Open\": 464.96,\r\n        \"High\": 469.65,\r\n        \"Low\": 464.03,\r\n        \"Close\": 467.68,\r\n        \"Volume\": 20131700.0,\r\n        \"Adj_High\": 469.65,\r\n        \"Adj_Low\": 464.03,\r\n        \"Adj_Close\": 467.68,\r\n        \"Adj_Open\": 464.955,\r\n        \"Adj_Volume\": 20154460.0,\r\n        \"Split_Factor\": 1.0,\r\n        \"Dividend\": 0.0,\r\n        \"Name\": \"Microsoft Corporation\",\r\n        \"Exchange_Code\": \"NASDAQ\",\r\n        \"Asset_Type\": \"Stock\",\r\n        \"Price_Currency\": \"USD\",\r\n        \"Symbol\": \"MSFT\",\r\n        \"Exchange\": \"XNAS\",\r\n        \"Date\": \"2025-06-05T00:00:00+00:00\"\r\n    },\r\n    {\r\n        \"Open\": 202.91,\r\n        \"High\": 206.24,\r\n        \"Low\": 202.15,\r\n        \"Close\": 202.82,\r\n        \"Volume\": 42889828.0,\r\n        \"Adj_High\": 206.24,\r\n        \"Adj_Low\": 202.1,\r\n        \"Adj_Close\": 202.82,\r\n        \"Adj_Open\": 202.91,\r\n        \"Adj_Volume\": 43603985.0,\r\n        \"Split_Factor\": 1.0,\r\n        \"Dividend\": 0.0,\r\n        \"Name\": \"Apple Inc\",\r\n        \"Exchange_Code\": \"NASDAQ\",\r\n        \"Asset_Type\": \"Stock\",\r\n        \"Price_Currency\": \"USD\",\r\n        \"Symbol\": \"AAPL\",\r\n        \"Exchange\": \"XNAS\",\r\n        \"Date\": \"2025-06-04T00:00:00+00:00\"\r\n    },\r\n    {\r\n        \"Open\": 464.0,\r\n        \"High\": 465.69,\r\n        \"Low\": 463.0201,\r\n        \"Close\": 463.87,\r\n        \"Volume\": 14162688.0,\r\n        \"Adj_High\": 465.69,\r\n        \"Adj_Low\": 463.0201,\r\n        \"Adj_Close\": 463.87,\r\n        \"Adj_Open\": 464.0,\r\n        \"Adj_Volume\": 14162688.0,\r\n        \"Split_Factor\": 1.0,\r\n        \"Dividend\": 0.0,\r\n        \"Name\": \"Microsoft Corporation\",\r\n        \"Exchange_Code\": \"NASDAQ\",\r\n        \"Asset_Type\": \"Stock\",\r\n        \"Price_Currency\": \"USD\",\r\n        \"Symbol\": \"MSFT\",\r\n        \"Exchange\": \"XNAS\",\r\n        \"Date\": \"2025-06-04T00:00:00+00:00\"\r\n    },\r\n    {\r\n        \"Open\": 201.35,\r\n        \"High\": 203.77,\r\n        \"Low\": 200.96,\r\n        \"Close\": 203.27,\r\n        \"Volume\": 46342500.0,\r\n        \"Adj_High\": 203.77,\r\n        \"Adj_Low\": 200.955,\r\n        \"Adj_Close\": 203.27,\r\n        \"Adj_Open\": 201.35,\r\n        \"Adj_Volume\": 46381567.0,\r\n        \"Split_Factor\": 1.0,\r\n        \"Dividend\": 0.0,\r\n        \"Name\": \"Apple Inc\",\r\n        \"Exchange_Code\": \"NASDAQ\",\r\n        \"Asset_Type\": \"Stock\",\r\n        \"Price_Currency\": \"USD\",\r\n        \"Symbol\": \"AAPL\",\r\n        \"Exchange\": \"XNAS\",\r\n        \"Date\": \"2025-06-03T00:00:00+00:00\"\r\n    },\r\n    {\r\n        \"Open\": 461.47,\r\n        \"High\": 464.115,\r\n        \"Low\": 460.8622,\r\n        \"Close\": 462.97,\r\n        \"Volume\": 15721919.0,\r\n        \"Adj_High\": 464.14,\r\n        \"Adj_Low\": 460.8622,\r\n        \"Adj_Close\": 462.97,\r\n        \"Adj_Open\": 461.47,\r\n        \"Adj_Volume\": 15743760.0,\r\n        \"Split_Factor\": 1.0,\r\n        \"Dividend\": 0.0,\r\n        \"Name\": \"Microsoft Corporation\",\r\n        \"Exchange_Code\": \"NASDAQ\",\r\n        \"Asset_Type\": \"Stock\",\r\n        \"Price_Currency\": \"USD\",\r\n        \"Symbol\": \"MSFT\",\r\n        \"Exchange\": \"XNAS\",\r\n        \"Date\": \"2025-06-03T00:00:00+00:00\"\r\n    },\r\n    {\r\n        \"Open\": 200.15,\r\n        \"High\": 202.13,\r\n        \"Low\": 200.12,\r\n        \"Close\": 201.7,\r\n        \"Volume\": 35314257.0,\r\n        \"Adj_High\": 202.13,\r\n        \"Adj_Low\": 200.12,\r\n        \"Adj_Close\": 201.7,\r\n        \"Adj_Open\": 200.28,\r\n        \"Adj_Volume\": 35423294.0,\r\n        \"Split_Factor\": 1.0,\r\n        \"Dividend\": 0.0,\r\n        \"Name\": \"Apple Inc\",\r\n        \"Exchange_Code\": \"NASDAQ\",\r\n        \"Asset_Type\": \"Stock\",\r\n        \"Price_Currency\": \"USD\",\r\n        \"Symbol\": \"AAPL\",\r\n        \"Exchange\": \"XNAS\",\r\n        \"Date\": \"2025-06-02T00:00:00+00:00\"\r\n    },\r\n    {\r\n        \"Open\": 457.0,\r\n        \"High\": 462.11,\r\n        \"Low\": 456.89,\r\n        \"Close\": 461.97,\r\n        \"Volume\": 16546045.0,\r\n        \"Adj_High\": 462.11,\r\n        \"Adj_Low\": 456.89,\r\n        \"Adj_Close\": 461.97,\r\n        \"Adj_Open\": 457.14,\r\n        \"Adj_Volume\": 16626495.0,\r\n        \"Split_Factor\": 1.0,\r\n        \"Dividend\": 0.0,\r\n        \"Name\": \"Microsoft Corporation\",\r\n        \"Exchange_Code\": \"NASDAQ\",\r\n        \"Asset_Type\": \"Stock\",\r\n        \"Price_Currency\": \"USD\",\r\n        \"Symbol\": \"MSFT\",\r\n        \"Exchange\": \"XNAS\",\r\n        \"Date\": \"2025-06-02T00:00:00+00:00\"\r\n    }\r\n    ]\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7238/AddDTODataset",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7238",
+					"path": [
+						"AddDTODataset"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7238/DeleteDTODataset?id=68becbced15cfb0ef5161b78",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7238",
+					"path": [
+						"DeleteDTODataset"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "68becbced15cfb0ef5161b78"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
