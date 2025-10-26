@@ -19,10 +19,15 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    
+    app.UseSwaggerUI(options => 
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "v1");
+    });
 }
 
 app.UseHttpsRedirection();
-
+app.UseRouting();
 app.MapGet("/DTODatasets", (Func<Task<DTODataset[]>>)async delegate
 {
     DTODatasetService service = app.Services.GetService<DTODatasetService>();
@@ -58,7 +63,7 @@ app.MapPost("/AddDTODataset", (Func<DTODataset, CancellationToken, Task<IResult>
         return Results.InternalServerError(e);
     }
 });
-app.MapPost("/UpdateDTODataset", (Func<string, DTODataset, CancellationToken, Task<IResult>>)async delegate (string id, DTODataset toUpdate, CancellationToken ct)
+app.MapPut("/UpdateDTODataset", (Func<string, DTODataset, CancellationToken, Task<IResult>>)async delegate (string id, DTODataset toUpdate, CancellationToken ct)
 {
     DTODatasetService service = app.Services.GetService<DTODatasetService>();
     try
