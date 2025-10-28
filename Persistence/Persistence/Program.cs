@@ -6,16 +6,17 @@ using Persistence.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("DatabaseSettings"));
-builder.Services.AddSingleton((Func<IServiceProvider, IDatabaseSettings>)((IServiceProvider sp) => sp.GetRequiredService<IOptions<DatabaseSettings>>().Value));
+
+// Configure MongoDB connection
+var dbConfig = builder.Configuration.GetSection("DatabaseSettings").Get<DatabaseSettings>();
+dbConfig.ConnectionString = builder.Configuration["MongoDBConnectionString"];
+builder.Services.AddSingleton<IDatabaseSettings>(dbConfig as IDatabaseSettings);
+
 builder.Services.AddSingleton<DTODatasetService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

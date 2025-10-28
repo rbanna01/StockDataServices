@@ -2,10 +2,10 @@
 {
     public interface IDatabaseSettings
     {
-        string CollectionName { get; set; }
+       string GetCollectionName();
 
-        string ConnectionString { get; set; }
+       string GetConnectionString();
 
-        string DatabaseName { get; set; }
+        string GetDatabaseName();
     }
 }

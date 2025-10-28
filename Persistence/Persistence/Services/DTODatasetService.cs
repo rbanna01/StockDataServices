@@ -11,9 +11,9 @@ namespace Persistence.Services
 
         public DTODatasetService(IDatabaseSettings settings)
         {
-            MongoClient client = new MongoClient(settings.ConnectionString);
-            IMongoDatabase database = client.GetDatabase(settings.DatabaseName);
-            _dtoDatasets = database.GetCollection<DTODataset>(settings.CollectionName);
+            MongoClient client = new MongoClient(settings.GetConnectionString());
+            IMongoDatabase database = client.GetDatabase(settings.GetDatabaseName());
+            _dtoDatasets = database.GetCollection<DTODataset>(settings.GetCollectionName());
         }
 
         public async ValueTask<List<DTODataset>> GetAll()
