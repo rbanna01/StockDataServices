@@ -10,6 +10,7 @@ builder.Services.AddOpenApi();
 
 // Configure MongoDB connection
 var dbConfig = builder.Configuration.GetSection("DatabaseSettings").Get<DatabaseSettings>();
+                             // Needs exported before running project
 dbConfig.ConnectionString = builder.Configuration["MONGODB_CONNECTION_STRING"];
 builder.Services.AddSingleton<IDatabaseSettings>(dbConfig as IDatabaseSettings);
 builder.Services.AddSingleton<DTODatasetService>();
