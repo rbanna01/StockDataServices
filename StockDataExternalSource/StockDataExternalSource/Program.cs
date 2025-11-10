@@ -20,8 +20,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-string accessKeyUriComponent = "access_key=" + builder.Configuration["MarketStackApiKey"];
+                           
+string accessKeyUriComponent = "access_key=" 
+   + // Currently needs exported before running project
+   builder.Configuration["MARKET_STACK_API_KEY"];
 builder.Services.AddHttpClient("MarketStack", delegate (HttpClient httpClient)
 {
     httpClient.BaseAddress = new Uri(builder.Configuration.GetConnectionString("MarketStack"));
