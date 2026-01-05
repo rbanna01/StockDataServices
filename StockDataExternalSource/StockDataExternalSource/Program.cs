@@ -30,13 +30,13 @@ builder.Services.AddHttpClient("MarketStack", delegate (HttpClient httpClient)
 });
 WebApplication app = builder.Build();
 
-//app.Use(async delegate (HttpContext context, Func<Task> next)
-//{
-//    DateTime timestamp = DateTime.Now;
-//    app.Logger.LogDebug($"{timestamp}: {context.Request.Path} {context.Request.QueryString}");
-//    await next();
-//    app.Logger.LogDebug($"Response for request {context.Request.Path} {context.Request.QueryString} ({timestamp}): {context.Response.StatusCode}, {context.Response.ContentType}");
-//});
+app.Use(async delegate (HttpContext context, Func<Task> next)
+{
+   DateTime timestamp = DateTime.Now;
+   app.Logger.LogDebug($"{timestamp}: {context.Request.Path} {context.Request.QueryString}");
+   await next();
+   app.Logger.LogDebug($"Response for request {context.Request.Path} {context.Request.QueryString} ({timestamp}): {context.Response.StatusCode}, {context.Response.ContentType}");
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
