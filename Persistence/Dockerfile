@@ -1,6 +1,12 @@
+# syntax=docker/dockerfile:1.4
+
+#Port on which to listen
+ARG PORT="5210"
+
 # Restore and build code
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 LABEL org.opencontainers.image.authors="Ruaridhi Bannatyne"
+
 WORKDIR /source
 
 # Restore project before copying rest
@@ -11,13 +17,12 @@ RUN dotnet restore
 COPY --link ./Persistence/. .
 RUN dotnet publish -o /publish
 
-RUN --mount=type=secret,id=mongodb_connection_string \
-env=MONGODB_CONNECTION_STRING
 
 # Run
-FROM mcr.microsoft.com/dotnet/aspnet:9.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
+ARG PORT
 WORKDIR /publish
 COPY --link --from=build /publish .
-EXPOSE 5210 
-ENV ASPNETCORE_URLS=http://+:5210
+EXPOSE ${PORT} 
+ENV ASPNETCORE_URLS=http://0.0.0.0:${PORT}
 ENTRYPOINT ["./Persistence"]
