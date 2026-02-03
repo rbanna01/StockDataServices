@@ -1,10 +1,22 @@
 services:
   external_source:
-    build: ./StockDataExternalSource/StockDataExternalSource/
-    ports: 
+    build: 
+      context: ./StockDataExternalSource/StockDataExternalSource/
+      args:
+       - PORT_ES=5221
+    ports:
       - "5221:5221"
     environment:
-      - MARKET_STACK_API_KEY=${MARKET_STACK_API_KEY?error} 
+      - MARKET_STACK_API_KEY=${MARKET_STACK_API_KEY?error}
+  persistence:
+    build: 
+      context: ./Persistence/
+      args:
+        - PORT=5210
+    ports:
+      -  "5210:5210"
+    environment:
+      - MONGODB_CONNECTION_STRING=${MONGODB_CONNECTION_STRING?error}
 # NB currently needs host environmental var exported, and docker compose 
 # run with -E flag.
 
